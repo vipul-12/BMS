@@ -1,0 +1,27 @@
+===================================================================================================
+            Transfer trigger increments and decrements balance from respected users involved in the transaction
+create trigger trans_trigger 
+after insert on transactions
+ for each row 
+begin 
+declare var char;
+ set var = new.status;
+ if ( var = "S" ) then 
+update accounts set balance = balance - new.amount where account_no = new.sender_acc_no;
+ update accounts set balance = balance + new.amount where account_no = new.reciever_acc_no;
+ end if; 
+end!
+===================================================================================================
+    Loans Trigger adds the loan amount on the respective users account
+create trigger loans_trigger
+after update on loans
+ for each row 
+ begin
+  declare 
+  var char; 
+  set var = new.status; 
+  if (var =  "S") 
+  then update accounts set balance = balance + new.amount where account_no = new.from_user; 
+  end if; 
+  end!
+===================================================================================================
